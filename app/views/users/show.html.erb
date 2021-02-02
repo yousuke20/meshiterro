@@ -1,0 +1,17 @@
+<div class="container">
+  <div class-"row no-gutters">
+    <div class="col-md-5 col-sm-10 mx-2 mx-sm-auto shadow-lg rounded px-0 my-5">
+      <div class="form-body p-4">
+        <div class="profile-container">
+          <h3 class="profile-name"><%= @user.name %></h3>
+          <%= attachment_image_tag @user, :profile_image, :fill, 100, 100, format:'jpeg', fallback: "no_image.jpg" %>
+          <% if @user.id == current_user.id %>
+            <p class="btn btn-lg btn-block btn-light mt-4"><%= link_to "プロフィール編集",edit_user_path(@user) %></p>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%= render 'post_images/list',post_images: @post_images  %>

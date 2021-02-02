@@ -1,0 +1,53 @@
+  <div class="container">
+    <div class="row no-gutters">
+      <div class="col-md-7 col-sm-10 mx-2 mx-sm-auto shadow-lg rounded px-0 my-5">
+        <h5 class="text-dark bg-light p-4 mb-0">ツイート詳細</h5>
+        <div class="form-body">
+          <div class="field">
+            <%= attachment_image_tag @post_image, :image, class:"img-fluid" %>
+            <p>ショップ名:<br><%= @post_image.shop_name %></br></p>
+            <p>説明:<br><%= @post_image.caption %></br></p>
+            <p>ユーザーネーム:<br><%= @post_image.user.name %></br></p>
+            <p>投稿日時:<br><%= @post_image.created_at.strftime('%Y/%m/%d') %></br></p>
+            <% if @post_image.user == current_user %>
+              <%= link_to "ツイートを削除", post_image_path(@post_image), method: :delete %>
+            <% end %>
+            <% if @post_image.favolited_by?(current_user) %>
+              <p><br>
+                <%= link_to post_image_favolites_path(@post_image), method: :delete do %>
+                  ❤️<%= @post_image.favolites.count %> いいね
+                <% end %>  
+              </br></p>
+            <% else %>
+              <p><br>
+                <%= link_to post_image_favolites_path(@post_image), method: :post do %>
+                  ♡<i class="fas fa-heart-unlike"></i><%= @post_image.favolites.count %> いいね
+                <% end %>  
+              </br></p>
+            <% end %>
+          </div>
+        </div>
+        <div class="comments">
+          <p>コメント件数:<%= @post_image.post_comments.count %></p>
+          <% @post_image.post_comments.each do |post_comment| %>
+            <p><%= attachment_image_tag post_comment.user, :profile_image, :fill, 60, 60, fallback: "no_image.jpg" %></p>
+            <br><%= post_comment.user.name %></br>
+            <br><%= post_comment.created_at.strftime('%Y/%m/%D')%><%= post_comment.comment %></br>
+            <br>
+              <% if post_comment.user == current_user %>
+              <div class="comment-delete">
+                <%= link_to "削除", post_image_post_comment_path(post_comment.post_image, post_comment),method: :delete %>
+              </div>
+              <% end %>
+            </br>  
+          <% end %>
+        </div>
+        <div class="new-comment">
+          <%= form_with(model: [@post_image, @post_comment], local: true) do |f| %>
+            <%= f.text_area :comment, class:"form-control", rows:'5',placeholder: "コメントをここに" %>
+            <%= f.submit "コメントを送信する", class:"btn btn-lg btn-block btn-info mt-4" %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
